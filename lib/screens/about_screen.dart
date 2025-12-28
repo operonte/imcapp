@@ -56,9 +56,7 @@ class _AboutScreenState extends State<AboutScreen> {
   }
 
   Future<void> _launchPrivacyPolicy() async {
-    // TODO: Actualizar con tu URL real de GitHub Pages después de publicarlo
-    // Ejemplo: 'https://tu-usuario.github.io/imcapp/privacy_policy.html'
-    const url = 'https://cristianbravo.github.io/imcapp/privacy_policy.html';
+    const url = 'https://operonte.github.io/imcapp/privacy_policy.html';
     final Uri uri = Uri.parse(url);
     if (await canLaunchUrl(uri)) {
       await launchUrl(uri, mode: LaunchMode.externalApplication);
