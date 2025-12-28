@@ -87,14 +87,8 @@ class _AboutScreenState extends State<AboutScreen> {
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: Theme.of(context).brightness == Brightness.dark
-                ? [
-                    const Color(0xFF353535),
-                    const Color(0xFF424242),
-                  ]
-                : [
-                    Colors.blue.shade50,
-                    Colors.teal.shade50,
-                  ],
+                ? [const Color(0xFF353535), const Color(0xFF424242)]
+                : [Colors.blue.shade50, Colors.teal.shade50],
           ),
         ),
         child: SingleChildScrollView(
@@ -107,7 +101,9 @@ class _AboutScreenState extends State<AboutScreen> {
               Container(
                 padding: const EdgeInsets.all(24),
                 decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.primary.withValues(alpha: 0.1),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
@@ -130,9 +126,14 @@ class _AboutScreenState extends State<AboutScreen> {
               // Versión
               if (!_isLoading)
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 8,
+                  ),
                   decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.primary.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Text(
@@ -281,7 +282,9 @@ class _AboutScreenState extends State<AboutScreen> {
                                 'cristian.bravo.droguett@gmail.com',
                                 style: TextStyle(
                                   fontSize: 14,
-                                  color: Theme.of(context).textTheme.bodyMedium?.color,
+                                  color: Theme.of(
+                                    context,
+                                  ).textTheme.bodyMedium?.color,
                                 ),
                               ),
                             ],
@@ -334,7 +337,9 @@ class _AboutScreenState extends State<AboutScreen> {
                                 'Lee nuestra política de privacidad',
                                 style: TextStyle(
                                   fontSize: 14,
-                                  color: Theme.of(context).textTheme.bodyMedium?.color,
+                                  color: Theme.of(
+                                    context,
+                                  ).textTheme.bodyMedium?.color,
                                 ),
                               ),
                             ],
@@ -367,4 +372,3 @@ class _AboutScreenState extends State<AboutScreen> {
     );
   }
 }
-

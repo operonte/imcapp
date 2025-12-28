@@ -37,6 +37,12 @@ flutter pub get
 flutter run
 ```
 
+## 📥 Descargar APK
+
+¿Quieres probar la app? Descarga la APK aquí
+
+> **Nota:** El APK estará disponible próximamente en la sección de Releases de GitHub.
+
 ## 🛠️ Compilar para Producción
 
 ### Android (APK)
