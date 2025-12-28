@@ -35,19 +35,31 @@ class _AboutScreenState extends State<AboutScreen> {
   }
 
   Future<void> _launchEmail() async {
-    final Uri emailUri = Uri(
-      scheme: 'mailto',
-      path: 'cristian.bravo.droguett@gmail.com',
-      query: 'subject=Consulta sobre Calculadora IMC',
-    );
-    if (await canLaunchUrl(emailUri)) {
-      await launchUrl(emailUri);
-    } else {
+    try {
+      final Uri emailUri = Uri(
+        scheme: 'mailto',
+        path: 'cristian.bravo.droguett@gmail.com',
+        query: 'subject=Consulta sobre Calculadora IMC',
+      );
+      if (await canLaunchUrl(emailUri)) {
+        await launchUrl(emailUri, mode: LaunchMode.externalApplication);
+      } else {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('No se pudo abrir el cliente de correo'),
+              backgroundColor: Color(0xFFE57373),
+              behavior: SnackBarBehavior.floating,
+            ),
+          );
+        }
+      }
+    } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('No se pudo abrir el cliente de correo'),
-            backgroundColor: Color(0xFFE57373),
+          SnackBar(
+            content: Text('Error al abrir el correo: ${e.toString()}'),
+            backgroundColor: const Color(0xFFE57373),
             behavior: SnackBarBehavior.floating,
           ),
         );
@@ -56,16 +68,28 @@ class _AboutScreenState extends State<AboutScreen> {
   }
 
   Future<void> _launchPrivacyPolicy() async {
-    const url = 'https://operonte.github.io/imcapp/privacy_policy.html';
-    final Uri uri = Uri.parse(url);
-    if (await canLaunchUrl(uri)) {
-      await launchUrl(uri, mode: LaunchMode.externalApplication);
-    } else {
+    try {
+      const url = 'https://operonte.github.io/imcapp/privacy_policy.html';
+      final Uri uri = Uri.parse(url);
+      if (await canLaunchUrl(uri)) {
+        await launchUrl(uri, mode: LaunchMode.externalApplication);
+      } else {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('No se pudo abrir el enlace'),
+              backgroundColor: Color(0xFFE57373),
+              behavior: SnackBarBehavior.floating,
+            ),
+          );
+        }
+      }
+    } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('No se pudo abrir el enlace'),
-            backgroundColor: Color(0xFFE57373),
+          SnackBar(
+            content: Text('Error al abrir el enlace: ${e.toString()}'),
+            backgroundColor: const Color(0xFFE57373),
             behavior: SnackBarBehavior.floating,
           ),
         );
