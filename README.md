@@ -23,7 +23,7 @@ Una aplicación Flutter moderna y completa para calcular y gestionar tu Índice 
 
 1. Clona el repositorio:
 ```bash
-git clone https://github.com/TU-USUARIO/imcapp.git
+git clone https://github.com/operonte/imcapp.git
 cd imcapp
 ```
 
@@ -57,13 +57,13 @@ flutter build ios --release
 ## 📄 Política de Privacidad
 
 La política de privacidad está disponible en:
-https://TU-USUARIO.github.io/imcapp/privacy_policy.html
+https://operonte.github.io/imcapp/privacy_policy.html
 
 ## 👨‍💻 Desarrollador
 
 **Cristian Bravo Droguett**
 
-Desarrollado con la ayuda de Cursor AI
+Desarrollado con ayuda de herramientas de desarrollo
 
 - 📧 Email: cristian.bravo.droguett@gmail.com
 
