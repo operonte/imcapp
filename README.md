@@ -39,9 +39,9 @@ flutter run
 
 ## 📥 Descargar APK
 
-¿Quieres probar la app? Descarga la APK aquí
+¿Quieres probar la app? [Descarga la APK aquí](https://github.com/operonte/imcapp/releases)
 
-> **Nota:** El APK estará disponible próximamente en la sección de Releases de GitHub.
+> **Nota:** El APK estará disponible en la sección de [Releases](https://github.com/operonte/imcapp/releases) de GitHub. Si no hay releases disponibles, puedes compilar la APK siguiendo las instrucciones de compilación más abajo.
 
 ## 🛠️ Compilar para Producción
 
