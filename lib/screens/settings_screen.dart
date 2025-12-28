@@ -99,26 +99,35 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     style: TextStyle(fontSize: 14, color: Colors.grey),
                   ),
                   const SizedBox(height: 12),
-                  RadioListTile<String>(
+                  ListTile(
                     title: const Text('Claro'),
-                    value: 'light',
-                    groupValue: _themeMode,
-                    onChanged: (value) => _changeThemeMode(value!),
-                    activeColor: Theme.of(context).colorScheme.primary,
+                    leading: Radio<String>(
+                      value: 'light',
+                      groupValue: _themeMode,
+                      onChanged: (value) => _changeThemeMode(value!),
+                      activeColor: Theme.of(context).colorScheme.primary,
+                    ),
+                    onTap: () => _changeThemeMode('light'),
                   ),
-                  RadioListTile<String>(
+                  ListTile(
                     title: const Text('Oscuro'),
-                    value: 'dark',
-                    groupValue: _themeMode,
-                    onChanged: (value) => _changeThemeMode(value!),
-                    activeColor: Theme.of(context).colorScheme.primary,
+                    leading: Radio<String>(
+                      value: 'dark',
+                      groupValue: _themeMode,
+                      onChanged: (value) => _changeThemeMode(value!),
+                      activeColor: Theme.of(context).colorScheme.primary,
+                    ),
+                    onTap: () => _changeThemeMode('dark'),
                   ),
-                  RadioListTile<String>(
+                  ListTile(
                     title: const Text('Sistema'),
-                    value: 'system',
-                    groupValue: _themeMode,
-                    onChanged: (value) => _changeThemeMode(value!),
-                    activeColor: Theme.of(context).colorScheme.primary,
+                    leading: Radio<String>(
+                      value: 'system',
+                      groupValue: _themeMode,
+                      onChanged: (value) => _changeThemeMode(value!),
+                      activeColor: Theme.of(context).colorScheme.primary,
+                    ),
+                    onTap: () => _changeThemeMode('system'),
                   ),
                 ],
               ),
@@ -157,19 +166,25 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     style: TextStyle(fontSize: 14, color: Colors.grey),
                   ),
                   const SizedBox(height: 12),
-                  RadioListTile<String>(
+                  ListTile(
                     title: const Text('Español'),
-                    value: 'es',
-                    groupValue: _language,
-                    onChanged: (value) => _changeLanguage(value!),
-                    activeColor: Theme.of(context).colorScheme.primary,
+                    leading: Radio<String>(
+                      value: 'es',
+                      groupValue: _language,
+                      onChanged: (value) => _changeLanguage(value!),
+                      activeColor: Theme.of(context).colorScheme.primary,
+                    ),
+                    onTap: () => _changeLanguage('es'),
                   ),
-                  RadioListTile<String>(
+                  ListTile(
                     title: const Text('English'),
-                    value: 'en',
-                    groupValue: _language,
-                    onChanged: (value) => _changeLanguage(value!),
-                    activeColor: Theme.of(context).colorScheme.primary,
+                    leading: Radio<String>(
+                      value: 'en',
+                      groupValue: _language,
+                      onChanged: (value) => _changeLanguage(value!),
+                      activeColor: Theme.of(context).colorScheme.primary,
+                    ),
+                    onTap: () => _changeLanguage('en'),
                   ),
                 ],
               ),

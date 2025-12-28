@@ -233,7 +233,7 @@ class _AboutScreenState extends State<AboutScreen> {
                       ),
                       const SizedBox(height: 8),
                       Text(
-                        'Desarrollado con la ayuda de Cursor AI',
+                        'Desarrollado con ayuda de herramientas de desarrollo',
                         style: TextStyle(
                           fontSize: 14,
                           color: Theme.of(context).textTheme.bodySmall?.color,

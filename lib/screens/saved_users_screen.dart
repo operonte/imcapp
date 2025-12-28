@@ -272,12 +272,13 @@ class _SavedUsersScreenState extends State<SavedUsersScreen> {
                                             color: Colors.green.shade300,
                                             tooltip: 'Exportar',
                                             onPressed: () async {
+                                              if (!mounted) return;
+                                              final messenger = ScaffoldMessenger.of(context);
                                               try {
                                                 await ExportService.exportUserData(
                                                     userName);
                                                 if (mounted) {
-                                                  ScaffoldMessenger.of(context)
-                                                      .showSnackBar(
+                                                  messenger.showSnackBar(
                                                     const SnackBar(
                                                       content: Text(
                                                           'Datos exportados exitosamente'),
@@ -288,8 +289,7 @@ class _SavedUsersScreenState extends State<SavedUsersScreen> {
                                                 }
                                               } catch (e) {
                                                 if (mounted) {
-                                                  ScaffoldMessenger.of(context)
-                                                      .showSnackBar(
+                                                  messenger.showSnackBar(
                                                     SnackBar(
                                                       content: Text(
                                                           'Error: ${e.toString()}'),

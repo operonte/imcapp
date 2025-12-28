@@ -127,10 +127,12 @@ class _HistoryScreenState extends State<HistoryScreen> {
                   icon: const Icon(Icons.share),
                   tooltip: 'Exportar',
                   onPressed: () async {
+                    if (!mounted) return;
+                    final messenger = ScaffoldMessenger.of(context);
                     try {
                       await ExportService.exportUserData(_selectedUser!);
                       if (mounted) {
-                        ScaffoldMessenger.of(context).showSnackBar(
+                        messenger.showSnackBar(
                           const SnackBar(
                             content: Text('Datos exportados exitosamente'),
                             backgroundColor: Color(0xFF4CAF50), // Verde suave
@@ -140,7 +142,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                       }
                     } catch (e) {
                       if (mounted) {
-                        ScaffoldMessenger.of(context).showSnackBar(
+                        messenger.showSnackBar(
                           SnackBar(
                             content: Text('Error: ${e.toString()}'),
                             backgroundColor: const Color(0xFFE57373), // Rojo suave
