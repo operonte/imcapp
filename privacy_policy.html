@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Política de Privacidad - Calculadora IMC</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        h1 {
+            color: #4A90E2;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+        h2 {
+            color: #4A90E2;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            font-size: 1.8em;
+        }
+        p {
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+        ul {
+            margin-left: 30px;
+            margin-bottom: 15px;
+        }
+        li {
+            margin-bottom: 8px;
+        }
+        .last-updated {
+            color: #666;
+            font-style: italic;
+            margin-bottom: 30px;
+        }
+        .contact {
+            background: #f0f7ff;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 30px;
+            border-left: 4px solid #4A90E2;
+        }
+        .contact a {
+            color: #4A90E2;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .contact a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Política de Privacidad</h1>
+        <p class="last-updated">Última actualización: <span id="date"></span></p>
+
+        <h2>1. Información General</h2>
+        <p>
+            La aplicación "Calculadora IMC" es una herramienta diseñada para ayudarte a calcular y 
+            gestionar tu Índice de Masa Corporal (IMC). Esta política de privacidad describe cómo 
+            manejamos tus datos personales.
+        </p>
+
+        <h2>2. Datos que Recopilamos</h2>
+        <p>La aplicación recopila y almacena la siguiente información:</p>
+        <ul>
+            <li><strong>Nombre:</strong> Para identificar tus registros</li>
+            <li><strong>Peso:</strong> En kilogramos</li>
+            <li><strong>Altura:</strong> En centímetros</li>
+            <li><strong>Edad:</strong> Para cálculos de IMC</li>
+            <li><strong>Género:</strong> Hombre o Mujer</li>
+            <li><strong>Fecha y hora:</strong> De cada registro de IMC</li>
+        </ul>
+
+        <h2>3. Almacenamiento de Datos</h2>
+        <p>
+            <strong>Todos los datos se almacenan localmente en tu dispositivo.</strong> 
+            No enviamos, compartimos ni transmitimos ninguna información a servidores externos. 
+            Tus datos permanecen completamente privados y bajo tu control.
+        </p>
+
+        <h2>4. Uso de los Datos</h2>
+        <p>
+            Los datos recopilados se utilizan únicamente para:
+        </p>
+        <ul>
+            <li>Calcular tu IMC</li>
+            <li>Mostrar tu historial de progreso</li>
+            <li>Generar estadísticas y gráficos de tu evolución</li>
+            <li>Exportar tus datos cuando tú lo solicites</li>
+        </ul>
+
+        <h2>5. Compartir Información</h2>
+        <p>
+            <strong>No compartimos, vendemos ni alquilamos tus datos personales a terceros.</strong> 
+            Toda la información permanece en tu dispositivo y solo tú tienes acceso a ella.
+        </p>
+
+        <h2>6. Seguridad</h2>
+        <p>
+            Los datos se almacenan de forma segura en el almacenamiento local de tu dispositivo, 
+            utilizando las funciones de seguridad estándar del sistema operativo. Sin embargo, 
+            recomendamos mantener tu dispositivo protegido con contraseña o bloqueo biométrico.
+        </p>
+
+        <h2>7. Eliminación de Datos</h2>
+        <p>
+            Puedes eliminar tus datos en cualquier momento desde la aplicación. Al eliminar un 
+            registro o usuario, los datos se borran permanentemente de tu dispositivo.
+        </p>
+
+        <h2>8. Permisos de la Aplicación</h2>
+        <p>
+            La aplicación no requiere permisos especiales del sistema. No accedemos a tu ubicación, 
+            contactos, cámara, micrófono ni otros datos sensibles de tu dispositivo.
+        </p>
+
+        <h2>9. Cambios en esta Política</h2>
+        <p>
+            Podemos actualizar esta política de privacidad ocasionalmente. Te notificaremos de 
+            cualquier cambio significativo mediante una actualización de la aplicación. La fecha 
+            de la última actualización se muestra al inicio de este documento.
+        </p>
+
+        <h2>10. Contacto</h2>
+        <div class="contact">
+            <p>
+                Si tienes preguntas sobre esta política de privacidad o sobre cómo manejamos tus datos, 
+                puedes contactarnos en:
+            </p>
+            <p>
+                <strong>Email:</strong> 
+                <a href="mailto:cristian.bravo.droguett@gmail.com">cristian.bravo.droguett@gmail.com</a>
+            </p>
+        </div>
+
+        <h2>11. Consentimiento</h2>
+        <p>
+            Al usar esta aplicación, aceptas esta política de privacidad. Si no estás de acuerdo 
+            con alguna parte de esta política, te recomendamos no usar la aplicación.
+        </p>
+    </div>
+
+    <script>
+        document.getElementById('date').textContent = new Date().toLocaleDateString('es-ES', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        });
+    </script>
+</body>
+</html>
+
