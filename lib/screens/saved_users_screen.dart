@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../models/imc_record.dart';
+import '../models/weight_goal.dart';
 import '../services/storage_service.dart';
 import '../services/export_service.dart';
+import '../services/goal_service.dart';
 import 'history_screen.dart';
 import 'statistics_screen.dart';
+import 'home_screen.dart';
+import 'goal_screen.dart';
 
 class SavedUsersScreen extends StatefulWidget {
   const SavedUsersScreen({super.key});
@@ -16,6 +20,7 @@ class SavedUsersScreen extends StatefulWidget {
 class _SavedUsersScreenState extends State<SavedUsersScreen> {
   List<String> _users = [];
   Map<String, List<IMCRecord>> _userRecords = {};
+  Map<String, WeightGoal> _userGoals = {};
   bool _isLoading = true;
 
   @override
@@ -31,17 +36,25 @@ class _SavedUsersScreenState extends State<SavedUsersScreen> {
 
     final users = await StorageService.getUsers();
     final Map<String, List<IMCRecord>> userRecordsMap = {};
+    final Map<String, WeightGoal> goalsMap = {};
 
     for (final user in users) {
       final records = await StorageService.getRecordsByUser(user);
       if (records.isNotEmpty) {
         userRecordsMap[user] = records;
       }
+      
+      // Cargar meta del usuario
+      final goal = await GoalService.getGoal(user);
+      if (goal != null) {
+        goalsMap[user] = goal;
+      }
     }
 
     setState(() {
       _users = users;
       _userRecords = userRecordsMap;
+      _userGoals = goalsMap;
       _isLoading = false;
     });
   }
@@ -177,11 +190,14 @@ class _SavedUsersScreenState extends State<SavedUsersScreen> {
                         final categoriaColor =
                             _getCategoriaColor(latestRecord.categoria);
 
+                        final goal = _userGoals[userName];
+                        
                         return Card(
                           margin: const EdgeInsets.only(bottom: 16),
-                          elevation: 4,
+                          elevation: 6,
+                          shadowColor: categoriaColor.withValues(alpha: 0.2),
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(16),
+                            borderRadius: BorderRadius.circular(20),
                           ),
                           child: InkWell(
                             borderRadius: BorderRadius.circular(16),
@@ -252,8 +268,43 @@ class _SavedUsersScreenState extends State<SavedUsersScreen> {
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
                                           IconButton(
+                                            icon: const Icon(Icons.add_circle_outline),
+                                            color: Colors.orange.shade400,
+                                            tooltip: 'Agregar nuevos datos',
+                                            onPressed: () {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      HomeScreen(
+                                                    userName: userName,
+                                                  ),
+                                                ),
+                                              ).then((_) => _loadUsers());
+                                            },
+                                          ),
+                                          IconButton(
+                                            icon: const Icon(Icons.flag),
+                                            color: Colors.purple.shade400,
+                                            tooltip: 'Meta de peso',
+                                            onPressed: () async {
+                                              final result = await Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      GoalScreen(
+                                                    userName: userName,
+                                                  ),
+                                                ),
+                                              );
+                                              if (result == true) {
+                                                _loadUsers();
+                                              }
+                                            },
+                                          ),
+                                          IconButton(
                                             icon: const Icon(Icons.bar_chart),
-                                            color: Colors.blue.shade300,
+                                            color: Colors.blue.shade400,
                                             tooltip: 'Estadísticas',
                                             onPressed: () {
                                               Navigator.push(
@@ -350,6 +401,11 @@ class _SavedUsersScreenState extends State<SavedUsersScreen> {
                                       ],
                                     ),
                                   ),
+                                  // Meta de peso (si existe)
+                                  if (goal != null) ...[
+                                    const SizedBox(height: 12),
+                                    _buildGoalProgress(goal, latestRecord.peso),
+                                  ],
                                   const SizedBox(height: 12),
                                   Row(
                                     mainAxisAlignment:
@@ -357,12 +413,16 @@ class _SavedUsersScreenState extends State<SavedUsersScreen> {
                                     children: [
                                       Container(
                                         padding: const EdgeInsets.symmetric(
-                                          horizontal: 12,
-                                          vertical: 6,
+                                          horizontal: 14,
+                                          vertical: 8,
                                         ),
                                         decoration: BoxDecoration(
                                           color: categoriaColor.withValues(alpha: 0.2),
                                           borderRadius: BorderRadius.circular(20),
+                                          border: Border.all(
+                                            color: categoriaColor.withValues(alpha: 0.3),
+                                            width: 1,
+                                          ),
                                         ),
                                         child: Text(
                                           latestRecord.categoria,
@@ -431,9 +491,106 @@ class _SavedUsersScreenState extends State<SavedUsersScreen> {
           style: TextStyle(
             fontSize: 11,
             color: Colors.grey.shade600,
+            fontWeight: FontWeight.w500,
           ),
         ),
       ],
+    );
+  }
+
+  Widget _buildGoalProgress(WeightGoal goal, double currentWeight) {
+    final progress = goal.calculateProgress(currentWeight);
+    final remaining = goal.calculateRemaining(currentWeight);
+    final isOnTrack = goal.isOnTrack(currentWeight);
+    final difference = goal.calculateDifference(currentWeight);
+    final isGaining = goal.targetWeight > goal.initialWeight;
+    
+    final progressColor = isOnTrack 
+        ? (isGaining ? Colors.blue : Colors.green)
+        : Colors.orange;
+    
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.purple.shade50,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: Colors.purple.shade200,
+          width: 1.5,
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(Icons.flag, color: Colors.purple.shade600, size: 20),
+              const SizedBox(width: 8),
+              Text(
+                'Meta de Peso',
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.purple.shade700,
+                ),
+              ),
+              const Spacer(),
+              Text(
+                '${goal.targetWeight.toStringAsFixed(1)} kg',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.purple.shade700,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(8),
+            child: LinearProgressIndicator(
+              value: progress / 100,
+              minHeight: 10,
+              backgroundColor: Colors.purple.shade100,
+              valueColor: AlwaysStoppedAnimation<Color>(progressColor),
+            ),
+          ),
+          const SizedBox(height: 8),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  Icon(
+                    isOnTrack ? Icons.trending_up : Icons.trending_flat,
+                    size: 16,
+                    color: isOnTrack ? Colors.green : Colors.orange,
+                  ),
+                  const SizedBox(width: 4),
+                  Text(
+                    isGaining 
+                        ? '+${difference.toStringAsFixed(1)} kg'
+                        : '${difference.toStringAsFixed(1)} kg',
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.grey.shade700,
+                    ),
+                  ),
+                ],
+              ),
+              Text(
+                '${remaining.toStringAsFixed(1)} kg restantes',
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.purple.shade600,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }

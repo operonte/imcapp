@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'screens/menu_screen.dart';
+import 'screens/login_screen.dart';
 import 'services/preferences_service.dart';
+import 'services/auth_service.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(const MyApp());
 }
 
@@ -16,6 +21,7 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   String _themeMode = 'system';
   String _language = 'es';
+  final AuthService _authService = AuthService();
 
   @override
   void initState() {
@@ -153,9 +159,40 @@ class _MyAppState extends State<MyApp> {
       darkTheme: _getDarkTheme(),
       themeMode: _getThemeMode(),
       locale: Locale(_language),
-      home: MenuScreen(
-        onThemeChanged: _updateTheme,
-        onLanguageChanged: _updateLanguage,
+      home: StreamBuilder(
+        stream: _authService.authStateChanges,
+        builder: (context, snapshot) {
+          // Mostrar loading mientras verifica autenticación
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Scaffold(
+              body: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [Colors.blue.shade400, Colors.teal.shade400],
+                  ),
+                ),
+                child: const Center(
+                  child: CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                  ),
+                ),
+              ),
+            );
+          }
+
+          // Si el usuario está autenticado, mostrar MenuScreen
+          if (snapshot.hasData && snapshot.data != null) {
+            return MenuScreen(
+              onThemeChanged: _updateTheme,
+              onLanguageChanged: _updateLanguage,
+            );
+          }
+
+          // Si no está autenticado, mostrar LoginScreen
+          return const LoginScreen();
+        },
       ),
     );
   }

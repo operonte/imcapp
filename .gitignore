@@ -43,3 +43,24 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Firebase and Google Services (IMPORTANTE: No subir estos archivos)
+**/google-services.json
+**/GoogleService-Info.plist
+**/google-services.json.backup
+*.apk
+*.aab
+
+# Variables de entorno y secretos
+.env
+.env.local
+.env.*.local
+*.key
+*.p12
+*.keystore
+
+# Archivos de configuración sensibles
+**/credentials.json
+**/service-account.json
+secrets/
+.secrets/

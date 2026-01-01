@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:intl/intl.dart';
 import '../models/imc_record.dart';
 import '../services/storage_service.dart';
 
@@ -24,8 +25,9 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
 
   Future<void> _loadRecords() async {
     final records = await StorageService.getRecordsByUser(widget.userName);
+    // Invertir el orden para que vaya de más antiguo a más reciente (izquierda a derecha)
     setState(() {
-      _records = records;
+      _records = records.reversed.toList();
       _isLoading = false;
     });
   }
@@ -44,8 +46,9 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
 
   String _getTrend() {
     if (_records.length < 2) return 'Sin datos suficientes';
-    final first = _records.last.imc;
-    final last = _records.first.imc;
+    // Ahora _records está ordenado de más antiguo a más reciente
+    final first = _records.first.imc;
+    final last = _records.last.imc;
     final diff = last - first;
     if (diff > 0.5) return 'Subiendo';
     if (diff < -0.5) return 'Bajando';
@@ -228,6 +231,8 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
     final spots = _records.asMap().entries.map((entry) {
       return FlSpot(entry.key.toDouble(), entry.value.imc);
     }).toList();
+    
+    final dateFormat = DateFormat('dd/MM');
 
     return Card(
       elevation: 3,
@@ -268,7 +273,32 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                       ),
                     ),
                     bottomTitles: AxisTitles(
-                      sideTitles: SideTitles(showTitles: false),
+                      sideTitles: SideTitles(
+                        showTitles: true,
+                        reservedSize: 30,
+                        getTitlesWidget: (value, meta) {
+                          final index = value.toInt();
+                          if (index >= 0 && index < _records.length) {
+                            // Mostrar cada fecha o cada N fechas dependiendo de la cantidad
+                            final showInterval = _records.length > 10 
+                                ? (_records.length / 5).ceil()
+                                : 1;
+                            if (index % showInterval == 0 || index == _records.length - 1) {
+                              return Padding(
+                                padding: const EdgeInsets.only(top: 6),
+                                child: Text(
+                                  dateFormat.format(_records[index].fecha),
+                                  style: TextStyle(
+                                    fontSize: 9,
+                                    color: Theme.of(context).textTheme.bodySmall?.color ?? Colors.grey,
+                                  ),
+                                ),
+                              );
+                            }
+                          }
+                          return const SizedBox();
+                        },
+                      ),
                     ),
                     topTitles: AxisTitles(
                       sideTitles: SideTitles(showTitles: false),
@@ -303,6 +333,8 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
     final spots = _records.asMap().entries.map((entry) {
       return FlSpot(entry.key.toDouble(), entry.value.peso);
     }).toList();
+    
+    final dateFormat = DateFormat('dd/MM');
 
     return Card(
       elevation: 3,
@@ -343,7 +375,32 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                       ),
                     ),
                     bottomTitles: AxisTitles(
-                      sideTitles: SideTitles(showTitles: false),
+                      sideTitles: SideTitles(
+                        showTitles: true,
+                        reservedSize: 30,
+                        getTitlesWidget: (value, meta) {
+                          final index = value.toInt();
+                          if (index >= 0 && index < _records.length) {
+                            // Mostrar cada fecha o cada N fechas dependiendo de la cantidad
+                            final showInterval = _records.length > 10 
+                                ? (_records.length / 5).ceil()
+                                : 1;
+                            if (index % showInterval == 0 || index == _records.length - 1) {
+                              return Padding(
+                                padding: const EdgeInsets.only(top: 6),
+                                child: Text(
+                                  dateFormat.format(_records[index].fecha),
+                                  style: TextStyle(
+                                    fontSize: 9,
+                                    color: Theme.of(context).textTheme.bodySmall?.color ?? Colors.grey,
+                                  ),
+                                ),
+                              );
+                            }
+                          }
+                          return const SizedBox();
+                        },
+                      ),
                     ),
                     topTitles: AxisTitles(
                       sideTitles: SideTitles(showTitles: false),

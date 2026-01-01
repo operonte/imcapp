@@ -4,7 +4,9 @@ import '../services/storage_service.dart';
 import 'history_screen.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  final String? userName;
+  
+  const HomeScreen({super.key, this.userName});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -19,6 +21,36 @@ class _HomeScreenState extends State<HomeScreen> {
   String _genero = 'Hombre';
   double? _imcCalculado;
   String? _categoriaCalculada;
+  bool _isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserData();
+  }
+
+  Future<void> _loadUserData() async {
+    if (widget.userName != null) {
+      setState(() {
+        _isLoading = true;
+      });
+      
+      _nameController.text = widget.userName!;
+      
+      // Cargar el último registro del usuario
+      final records = await StorageService.getRecordsByUser(widget.userName!);
+      if (records.isNotEmpty) {
+        final lastRecord = records.first; // Ya está ordenado por fecha descendente
+        _alturaController.text = (lastRecord.altura * 100).toStringAsFixed(0);
+        _edadController.text = lastRecord.edad.toString();
+        _genero = lastRecord.genero;
+      }
+      
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
 
   @override
   void dispose() {
@@ -76,10 +108,8 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         );
 
-        // Limpiar formulario
+        // Limpiar solo el peso, mantener los demás campos
         _pesoController.clear();
-        _alturaController.clear();
-        _edadController.clear();
         setState(() {
           _imcCalculado = null;
           _categoriaCalculada = null;
@@ -142,21 +172,24 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
         child: SafeArea(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(20.0),
-            child: Form(
-              key: _formKey,
-              child: Column(
+          child: _isLoading
+              ? const Center(child: CircularProgressIndicator())
+              : SingleChildScrollView(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   const SizedBox(height: 10),
                   Card(
-                    elevation: 4,
+                    elevation: 6,
+                    shadowColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
+                      borderRadius: BorderRadius.circular(20),
                     ),
                     child: Padding(
-                      padding: const EdgeInsets.all(20.0),
+                      padding: const EdgeInsets.all(24.0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
@@ -284,18 +317,26 @@ class _HomeScreenState extends State<HomeScreen> {
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Theme.of(context).colorScheme.primary,
                               foregroundColor: Colors.white,
-                              padding: const EdgeInsets.symmetric(vertical: 16),
+                              padding: const EdgeInsets.symmetric(vertical: 18),
                               shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
+                                borderRadius: BorderRadius.circular(14),
                               ),
-                              elevation: 3,
+                              elevation: 4,
+                              shadowColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.4),
                             ),
-                            child: const Text(
-                              'Calcular IMC',
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                              ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const Icon(Icons.calculate, size: 24),
+                                const SizedBox(width: 8),
+                                const Text(
+                                  'Calcular IMC',
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ],
@@ -305,13 +346,16 @@ class _HomeScreenState extends State<HomeScreen> {
                   if (_imcCalculado != null) ...[
                     const SizedBox(height: 30),
                     Card(
-                      elevation: 4,
+                      elevation: 8,
+                      shadowColor: _getCategoriaColor(_categoriaCalculada).withValues(alpha: 0.4),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
+                        borderRadius: BorderRadius.circular(20),
                       ),
                       child: Container(
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
                             colors: [
                               _getCategoriaColor(_categoriaCalculada),
                               _getCategoriaColor(
@@ -319,7 +363,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               ).withValues(alpha: 0.7),
                             ],
                           ),
-                          borderRadius: BorderRadius.circular(16),
+                          borderRadius: BorderRadius.circular(20),
                         ),
                         padding: const EdgeInsets.all(24.0),
                         child: Column(
